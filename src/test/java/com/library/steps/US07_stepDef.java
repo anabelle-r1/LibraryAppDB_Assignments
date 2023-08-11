@@ -5,6 +5,7 @@ import com.library.pages.BookPage;
 import com.library.pages.BorrowedBooksPage;
 import com.library.pages.DashBoardPage;
 import com.library.utility.BrowserUtil;
+import com.library.utility.DB_Util;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -35,6 +36,16 @@ public class US07_stepDef extends BasePage {
     }
     @Then("verify logged student has same book in database")
     public void verify_logged_student_has_same_book_in_database() {
+String query = "select distinct full_name, b.name\n" +
+        "from users u\n" +
+        "         inner join book_borrow bb on u.id = bb.user_id\n" +
+        "         inner join books b on bb.book_id = b.id\n" +
+        "where full_name = 'Test Student 5'\n" +
+        "  and name = 'Hanna book'";
+
+        DB_Util.runQuery(query);
+        String expectedResult = DB_Util.getCellValue(1, 2);
+        Assert.assertEquals(globalBookName,expectedResult);
 
     }
 }
